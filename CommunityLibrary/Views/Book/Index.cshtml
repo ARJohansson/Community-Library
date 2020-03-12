@@ -1,0 +1,78 @@
+﻿@model IEnumerable<CommunityLibrary.Models.Book>
+@inject UserManager<AppUser> UserManager
+@inject IReviewRepo reviewRepo
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+@if (User?.Identity?.IsAuthenticated ?? false)
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Book Owner</th>
+            <th>Borrower</th>
+            <th>Written</th>
+            <th>Availability</th>
+            <th>Reviews</th>
+            <th>Average Rating</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Owner)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Borrower)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Written)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Availability)
+            </td>
+            <td>
+                @{ ViewBag.reviewsOfBook = reviewRepo.GetReviewsByBook(item); }
+                <a asp-controller="Review" asp-action="Index" asp-route-id="@item.BookID">@item.Reviews.Count</a>
+            </td>
+            <td>
+                @{ ViewBag.avgBookRating = CommunityLibrary.Controllers.BookController.AverageBookRating(item); }
+                @Html.DisplayFor(modelItem => item.AverageRating)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.BookID">Details</a>
+                @if (User?.Identity?.IsAuthenticated ?? false)
+                {
+                    <p> | <a asp-controller="Review" asp-action="Create" asp-route-id="@item.BookID">Review</a></p>
+                    if (ViewBag.userBooks.Contains(item))
+                    {
+                        <p>
+                            |  <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a> |
+                            <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
+                        </p>
+                    }
+                }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

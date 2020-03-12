@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Review>
+
+@{
+    ViewData["Title"] = "Reviews";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+@if (User?.Identity?.IsAuthenticated ?? false)
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th> Reviewer </th>
+            <th> Review </th>
+            <th> Book </th>
+            <th> Book Rating </th>
+            <th> Review Rating </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reviewer.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
+                <a asp-controller="Book" asp-action="Details" asp-route-data="@item.BookTitle">@Html.DisplayFor(modelItem => item.BookTitle)</a>
+</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookRating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReviewRating)
+            </td>
+            <td>
+                @if (User?.Identity?.IsAuthenticated ?? false) { 
+                <p> <a asp-action="RateReview" asp-route-id="@item.ReviewID">Rate this Review</a> </p>
+                    @if(ViewBag.userReviews.Contains(item)){
+                        <p>
+                            |<a asp-action="Delete" asp-route-id="@item.ReviewID">Delete</a>
+                        </p>
+                    }
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

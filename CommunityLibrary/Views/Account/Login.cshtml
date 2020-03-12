@@ -1,0 +1,18 @@
+﻿@model LoginViewModel
+
+<div class="text-danger" asp-validation-summary="All"></div>
+
+<p>If you don't have an account sign up here: <a href="/Account/SignUp">Sign Up</a></p>
+
+<form asp-action="Login" method="post">
+    <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+    <div class="form-group">
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" />
+    </div>
+    <button class="btn btn-primary" type="submit" value="enter">Log In</button>
+</form>

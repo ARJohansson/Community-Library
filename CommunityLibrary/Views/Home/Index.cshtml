@@ -1,0 +1,36 @@
+﻿@model Book
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to the Community Library</h1>
+    @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
+    <p>Join and borrow books from other members of your community. Or, browse the selection and read personal 
+    reviews to see if you want to read that book that's been collecting dust on your shelf.</p>
+</div>
+
+<div>
+    <h4>Search our list of books by author:</h4>
+    <form method="post">
+        <input for="searchAuthor" name="searchAuthor" placeholder="Author Name" />
+        <button value="searchBtn" type="submit">Search</button>
+    </form>
+    <h4>or by title:</h4>
+    <form method="post">
+        <input for="searchTitle" name="searchTitle" placeholder="Title" />
+        <button value="searchBtn" type="submit">Search</button>
+    </form>
+</div>
+<br />
+
+<p><a href="/Book/Index">Check out the collection of books.</a></p>
+<p><a href="/Review/Index">Check out the reviews section.</a></p>
+
+<div class="text-center">
+    <h4>Most Popular Books:</h4>
+    @foreach (Book item in ViewBag.currentBooks)
+    {
+        <p>Title: @item.Title | Author: @item.Author | Average Rating: @item.AverageRating | Review(s): @item.Reviews.Count </p>
+    }
+</div>

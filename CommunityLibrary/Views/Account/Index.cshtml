@@ -1,0 +1,46 @@
+﻿@model AppUser
+
+@{ 
+    ViewData["Title"] = "User";
+    int bookCount, reviewCount, requestCount, receivedCount;
+    List<Book> books = new List<Book>();
+    if (ViewBag.currentBooks == null) { bookCount = 0; }
+    else { bookCount = ViewBag.currentBooks.Count; books = ViewBag.currentBooks; }
+    if (ViewBag.currentReviews == null) { reviewCount = 0; }
+    else { reviewCount = ViewBag.currentReviews.Count; }
+    if (ViewBag.currentRequests == null) { requestCount = 0; }
+    else { requestCount = ViewBag.currentRequests.Count; }
+    if (ViewBag.currentReceived == null) { receivedCount = 0; }
+    else { receivedCount = ViewBag.currentReceived.Count; }
+}
+
+<div>
+    <h4>@Model.UserName</h4>
+    <h6>@Model.Name</h6>
+    <h6>@Model.Email</h6>
+</div>
+
+
+<table class="table table-sm table-bordered">
+    <tr>
+        <th><a href="Book/Index">Books</a></th>
+        <th><a href="Review/Index">Reviews</a></th>
+    </tr>
+
+    <tr>
+        <td><a asp-controller="Book" asp-action="Index" asp-route-data="true">@bookCount</a></td>
+        <td><a asp-controller="Review" asp-action="Index" asp-route-data="true">@reviewCount</a></td>
+    </tr>
+</table>
+
+<table class="table table-sm table-bordered">
+    <tr>
+        <th><a href="Request/Index">Requests Made</a></th>
+        <th><a href="Request/Index">Requests Received</a></th>
+    </tr>
+
+    <tr>
+        <td><a asp-controller="Request" asp-action="Index" asp-route-data="requests">@requestCount</a></td>
+        <td><a asp-controller="Request" asp-action="Index" asp-route-data="received">@receivedCount</a></td>
+    </tr>
+</table>

@@ -1,0 +1,64 @@
+﻿@model CommunityLibrary.Models.Book
+@inject IReviewRepo reviewRepo
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Book</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Owner)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Owner)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Borrower)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Borrower)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Written)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Written)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Availability)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Availability)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AverageRating)
+        </dt>
+        <dd class="col-sm-10">
+            @{ ViewBag.reviewsOfBook = reviewRepo.GetReviewsByBook(Model);
+                ViewBag.avgBookRating = CommunityLibrary.Controllers.BookController.AverageBookRating(Model); }
+            @Html.DisplayFor(model => model.AverageRating)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.BookID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

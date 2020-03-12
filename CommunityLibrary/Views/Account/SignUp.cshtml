@@ -1,0 +1,42 @@
+﻿@model CreateUserViewModel;
+@*
+    * Author: Ashley Johansson
+    * Date Created: 11/19/2019 05:22PM
+    * Date Updated: 12/05/2019 09:45PM
+    * A form that allows users to sign into their
+    * current accounts, or to create a new account.
+*@
+
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+<body>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+
+    <h2>Create a new user here and get started with your book sharing!</h2>
+
+    <form method="post">
+        <div asp-validation-summary="All" style="background-color: red"></div>
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" /><br />
+        <span asp-validation-for="Email"></span> <br />
+
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" /><br />
+        <span asp-validation-for="Name"></span> <br />
+
+        <label asp-for="UserName">UserName</label>
+        <input asp-for="UserName" /><br />
+        <span asp-validation-for="UserName"></span> <br />
+
+        <label asp-for="Password">Password</label>
+        <input asp-for="Password" /><br />
+        <span asp-validation-for="Password"></span> <br />
+
+        <input type="submit" value="Enter" />
+    </form>
+    <a href="Character/Index"></a>
+</body>
