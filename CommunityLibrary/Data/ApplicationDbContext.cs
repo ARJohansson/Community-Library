@@ -21,6 +21,7 @@ namespace CommunityLibrary.Data
         public DbSet<Request> Requests { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
+
         public static async Task CreateAdminAccount(IServiceProvider serviceProvider, 
             IConfiguration configuration)
         {

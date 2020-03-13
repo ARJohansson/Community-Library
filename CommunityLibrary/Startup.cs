@@ -41,11 +41,17 @@ namespace CommunityLibrary
             services.AddIdentity<AppUser, IdentityRole>(opts =>
             {
                 opts.User.RequireUniqueEmail = true;
+                opts.User.AllowedUserNameCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.";
                 opts.Password.RequiredLength = 6;
                 opts.Password.RequireNonAlphanumeric = true;
                 opts.Password.RequireLowercase = true;
                 opts.Password.RequireUppercase = true;
                 opts.Password.RequireDigit = true;
+
+                // lockout options
+                opts.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                opts.Lockout.MaxFailedAccessAttempts = 5;
+                opts.Lockout.AllowedForNewUsers = true;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -57,6 +63,19 @@ namespace CommunityLibrary
             services.AddTransient<IReviewRepo, ReviewRepo>();
 
             services.AddControllersWithViews();
+            services.AddMvc(options =>
+            {
+                options.CacheProfiles.Add("NoStore",
+                    new CacheProfile()
+                    {
+                        NoStore = true
+                    });
+                options.CacheProfiles.Add("Default30",
+                    new CacheProfile()
+                    {
+                        Duration = 30
+                    });
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,6 +92,14 @@ namespace CommunityLibrary
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+                await next();
+            });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -88,7 +115,7 @@ namespace CommunityLibrary
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            context.Database.Migrate();
+            //context.Database.Migrate();
 
             ApplicationDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
             ApplicationDbContext.CreateTestUserAccount(app.ApplicationServices, Configuration).Wait();
