@@ -19,5 +19,31 @@ namespace CommunityLibrary.Repos
             context.Add(request);
             context.SaveChanges();
         }
+
+        public bool CheckForOwnerName(string userName)
+        {
+            for(int i = 0; i < context.Requests.Count(); i++)
+            {
+                List<Request> requests = Requests.ToList();
+                if(requests[i].Owner == userName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool CheckForRequesterName(string userName)
+        {
+            for(int i = 0; i < context.Requests.Count(); i++)
+            {
+                List<Request> requests = Requests.ToList();
+                if(requests[i].Requester == userName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

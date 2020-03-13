@@ -60,6 +60,11 @@ namespace CommunityLibrary.Controllers
             {
                 ViewBag.book = bookRepo.GetBookByTitle(data);
                 id = ViewBag.book.BookID;
+                AppUser user = await userManager.GetUserAsync(HttpContext.User);
+                if(ViewBag.book.Owner == user.UserName)
+                {
+                    ViewBag.userBooks = ViewBag.book;
+                }
             }
 
             if (id == null)

@@ -7,45 +7,47 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CommunityLibrary.Data;
 using CommunityLibrary.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using CommunityLibrary.Repos;
 
 namespace CommunityLibrary.Controllers
 {
+    [Authorize]
     public class RequestController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private UserManager<AppUser> userManager;
+        private IRequestRepo requestRepo;
 
-        public RequestController(ApplicationDbContext context)
+        public RequestController(ApplicationDbContext context, UserManager<AppUser> userMgr,
+                IRequestRepo requestR)
         {
             _context = context;
+            userManager = userMgr;
+            requestRepo = requestR;
         }
 
         // GET: Requests
         public async Task<IActionResult> Index()
         {
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
+            if (requestRepo.CheckForOwnerName(user.UserName))
+            {
+                ViewBag.requestsReceived = requestRepo.Requests.Where(e => e.Owner == user.UserName);
+            }
+            else if (requestRepo.CheckForRequesterName(user.UserName))
+            {
+                ViewBag.requestsSent = requestRepo.Requests.Where(e => e.Requester == user.UserName);
+            }
             return View(await _context.Requests.ToListAsync());
         }
 
-        // GET: Requests/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var request = await _context.Requests
-                .FirstOrDefaultAsync(m => m.RequestID == id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-
-            return View(request);
-        }
-
         // GET: Requests/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
+            Book book = _context.Books.Find(id);
+            ViewBag.thisBook = book.Title;
             return View();
         }
 
@@ -54,7 +56,7 @@ namespace CommunityLibrary.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RequestID,RequesterName,OwnerName,Duration,Accepted")] Request request)
+        public async Task<IActionResult> Create([Bind("BookTitle,RequestID,Requester,Owner,Duration")] Request request)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +88,7 @@ namespace CommunityLibrary.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RequestID,RequesterName,OwnerName,Duration,Accepted")] Request request)
+        public async Task<IActionResult> Edit(int id, [Bind("RequestID,Requester,Owner,BookTitle,Duration,Accepted")] Request request)
         {
             if (id != request.RequestID)
             {
@@ -131,18 +133,10 @@ namespace CommunityLibrary.Controllers
                 return NotFound();
             }
 
-            return View(request);
-        }
-
-        // POST: Requests/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var request = await _context.Requests.FindAsync(id);
             _context.Requests.Remove(request);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+
         }
 
         private bool RequestExists(int id)

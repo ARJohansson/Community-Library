@@ -70,6 +70,12 @@
                             <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
                         </p>
                     }
+                    else
+                    {
+                        <p>
+                            | <a asp-action="Details" asp-route-id="@item.BookID">Request</a>
+                        </p>
+                    }
                 }
             </td>
         </tr>

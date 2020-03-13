@@ -1,9 +1,11 @@
 ﻿@model CommunityLibrary.Models.Book
+@inject UserManager<AppUser> UserManager
 @inject IReviewRepo reviewRepo
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    AppUser user = await UserManager.GetUserAsync(Context.User);
 }
 
 <h1>Details</h1>
@@ -59,6 +61,17 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.BookID">Edit</a> |
+    @if (User?.Identity?.IsAuthenticated ?? false)
+    {
+        <p>
+            <a asp-action="Edit" asp-route-id="@Model.BookID">Edit</a> |
+        </p>
+        @if (Model.Availability == true && user.UserName != Model.Owner)
+        {
+            <p>
+                <a asp-controller="Request" asp-action="Create" asp-route-id="@Model.BookID">Request Book</a> |
+            </p>
+        }
+    }
     <a asp-action="Index">Back to List</a>
 </div>

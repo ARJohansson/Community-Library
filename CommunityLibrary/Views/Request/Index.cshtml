@@ -1,54 +1,57 @@
-﻿@model IEnumerable<CommunityLibrary.Models.Request>
+﻿@model IEnumerable<Request>
+@inject UserManager<AppUser> UserManager
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    AppUser user = await UserManager.GetUserAsync(Context.User);
 }
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Requester)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Owner)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Duration)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Accepted)
-            </th>
+            <th> Requester </th>
+            <th> Book Owner</th>
+            <th> Title</th>
+            <th> Duration </th>
+            <th> Accepted </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Requester)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Owner)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Duration)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Accepted)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RequestID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RequestID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RequestID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            @if (user.UserName == item.Owner)
+            {
+                <tr>
+                    <td> @Html.DisplayFor(modelItem => item.Requester)  </td>
+                    <td> @Html.DisplayFor(modelItem => item.Owner)      </td>
+                    <td> @Html.DisplayFor(modelItem => item.BookTitle)  </td>
+                    <td> @Html.DisplayFor(modelItem => item.Duration)   </td>
+                    <td> @Html.DisplayFor(modelItem => item.Accepted)   </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.RequestID">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@item.RequestID">Delete</a>
+
+                    </td>
+                </tr>
+            }
+        }
+        @foreach (var item in Model)
+        {
+            @if (user.UserName == item.Requester)
+            {
+                <tr>
+                    <td> @Html.DisplayFor(modelItem => item.Requester)  </td>
+                    <td> @Html.DisplayFor(modelItem => item.Owner)      </td>
+                    <td> @Html.DisplayFor(modelItem => item.BookTitle)  </td>
+                    <td> @Html.DisplayFor(modelItem => item.Duration)   </td>
+                    <td> @Html.DisplayFor(modelItem => item.Accepted)   </td>
+                    <td></td>
+                </tr>
+            }
+        }
     </tbody>
 </table>

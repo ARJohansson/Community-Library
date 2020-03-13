@@ -10,5 +10,7 @@ namespace CommunityLibrary.Repos
     {
         IEnumerable<Request> Requests { get; }
         void AddRequest(Request request);
+        bool CheckForOwnerName(string userName);
+        bool CheckForRequesterName(string userName);
     }
 }
