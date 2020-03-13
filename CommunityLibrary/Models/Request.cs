@@ -12,7 +12,7 @@ namespace CommunityLibrary.Models
         [Required]
         public string Requester { get; set; }
         [Required]
-        public AppUser Owner { get; set; }
+        public string Owner { get; set; }
         [Required]
         public string BookTitle { get; set; }
         [Required]

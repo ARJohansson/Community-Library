@@ -19,7 +19,7 @@ namespace CommunityLibrary.Models
         public string Author { get; set; }
         [Required]
         public string Owner { get; set; }
-        public AppUser Borrower { get; set; }
+        public string Borrower { get; set; }
 
         [Required]
         [DataType(DataType.Date)]  // causes default validation and sets the HTML5 data type

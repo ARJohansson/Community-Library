@@ -10,7 +10,7 @@ namespace CommunityLibrary.Models
     {
         public int ReviewID { get; set; }
         [Required]
-        public AppUser Reviewer { get; set; }
+        public string Reviewer { get; set; }
         [Required]
         public string BookTitle { get; set; }
         public string Text { get; set; }

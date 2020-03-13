@@ -10,7 +10,7 @@ namespace CommunityLibrary.Models
     {
         public int ReportID { get; set; }
         [Required]
-        public AppUser ReportedUserName { get; set; }
+        public string ReportedUserName { get; set; }
         [Required]
         public string Reason { get; set; }
         public string Details { get; set; }
