@@ -2,12 +2,12 @@
 @inject UserManager<AppUser> UserManager
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Requests";
     Layout = "~/Views/Shared/_Layout.cshtml";
     AppUser user = await UserManager.GetUserAsync(Context.User);
 }
 
-<h1>Index</h1>
+<h1>Requests</h1>
 
 <table class="table">
     <thead>

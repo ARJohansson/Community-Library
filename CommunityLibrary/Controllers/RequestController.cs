@@ -48,6 +48,7 @@ namespace CommunityLibrary.Controllers
         {
             Book book = _context.Books.Find(id);
             ViewBag.thisBook = book.Title;
+            ViewBag.bookOwner = book.Owner;
             return View();
         }
 
