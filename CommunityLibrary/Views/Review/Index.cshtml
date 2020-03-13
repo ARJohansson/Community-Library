@@ -42,11 +42,19 @@
                 @Html.DisplayFor(modelItem => item.ReviewRating)
             </td>
             <td>
-                @if (User?.Identity?.IsAuthenticated ?? false) { 
-                <p> <a asp-action="RateReview" asp-route-id="@item.ReviewID">Rate this Review</a> </p>
-                    @if(ViewBag.userReviews.Contains(item)){
+                @if (User?.Identity?.IsAuthenticated ?? false)
+                {
+                    <p> <a asp-action="RateReview" asp-route-id="@item.ReviewID">Rate this Review</a> </p>
+                    @if (ViewBag.userReviews.Contains(item))
+                    {
                         <p>
                             |<a asp-action="Delete" asp-route-id="@item.ReviewID">Delete</a>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            |<a asp-controller="Report" asp-action="Create" asp-route-id="@item.ReviewID">Report Review</a>
                         </p>
                     }
                 }

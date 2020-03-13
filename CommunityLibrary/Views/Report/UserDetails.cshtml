@@ -1,0 +1,135 @@
+﻿@model AppUser
+@inject IBookRepo bookRepo
+
+@{
+    ViewData["Title"] = "User";
+}
+
+<div>
+    <h4>UserName: @Model.UserName</h4>
+    <h6>Name: @Model.Name</h6>
+    <h6>Email: @Model.Email</h6>
+</div>
+
+<h4>Reports: @ViewBag.userReports.Count</h4>
+@if (ViewBag.userReports.Count > 0)
+{
+    <table class="table table-sm table-bordered">
+        <tr>
+            <th> Reason     </th>
+            <th> Details    </th>
+        </tr>
+        @foreach (var item in ViewBag.userReports)
+        {
+            <tr>
+                <td>@item.Reason</td>
+                <td>@item.Details</td>
+            </tr>
+        }
+    </table>
+}
+
+<h4>Books: @ViewBag.userBooks.Count</h4>
+@if (ViewBag.userBooks.Count > 0)
+{
+    <table class="table table-sm table-bordered">
+        <tr>
+            <th> Title          </th>
+            <th> Availability   </th>
+            <th> Reviews        </th>
+            <th> Rating         </th>
+        </tr>
+        @foreach (var item in ViewBag.userBooks)
+        {
+            <tr>
+                <td><a asp-controller="Book" asp-action="Details" asp-route-id="@item.BookID">@item.Title</a></td>
+                <td>@item.Availability</td>
+                <td><a asp-controller="Review" asp-action="Index" asp-route-data="true">@item.Reviews.Count</a></td>
+                <td>@item.AverageRating</td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <h5>@Model doesn't have any books</h5>
+}
+
+<h4>Reviews: @ViewBag.userReviews.Count</h4>
+@if (ViewBag.userReviews.Count > 0)
+{
+    <table class="table table-sm table-bordered">
+        <tr>
+            <th> Book Title     </th>
+            <th> Text           </th>
+            <th> Book Rating    </th>
+            <th> Review Rating  </th>
+        </tr>
+        @foreach (var item in ViewBag.userReviews)
+        {
+            <tr>
+                @{ Book book = bookRepo.GetBookByTitle(item.BookTitle); }
+                <td><a asp-controller="Book" asp-action="Details" asp-route-id="@book.BookID">@item.BookTitle</a></td>
+                <td>@item.Text</td>
+                <td>@item.BookRating</td>
+                <td>@item.ReviewRating</td>
+            </tr>
+        }
+    </table>
+}
+
+<h4>Received Requests: @ViewBag.userReceived.Count</h4>
+@if (ViewBag.userReceived.Count > 0)
+{
+    <table class="table table-sm table-bordered">
+        <tr>
+            <th> Book Title </th>
+            <th> Requester  </th>
+            <th> Duration   </th>
+            <th> Accepted   </th>
+        </tr>
+
+        @foreach (var item in ViewBag.userReceived)
+        {
+            <tr>
+                @{ Book book = bookRepo.GetBookByTitle(item.BookTitle); }
+                <td><a asp-controller="Book" asp-action="Details" asp-route-id="@book.BookID">@item.BookTitle</a></td>
+                <td>@item.Requester</td>
+                <td>@item.Duration</td>
+                <td>@item.Accepted</td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <h5>@Model has not received any requests</h5>
+}
+
+<h4>Sent Requests: @ViewBag.userRequests.Count</h4>
+@if (ViewBag.userRequests.Count > 0)
+{
+    <table class="table table-sm table-bordered">
+        <tr>
+            <th> Book Title </th>
+            <th> Owner      </th>
+            <th> Duration   </th>
+            <th> Accepted   </th>
+        </tr>
+
+        @foreach (var item in ViewBag.userRequests)
+        {
+            <tr>
+                @{ Book book = bookRepo.GetBookByTitle(item.BookTitle); }
+                <td><a asp-controller="Book" asp-action="Details" asp-route-id="@book.BookID">@item.BookTitle</a></td>
+                <td>@item.Owner</td>
+                <td>@item.Duration</td>
+                <td>@item.Accepted</td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <h5>@Model hasn't made any requests</h5>
+}
