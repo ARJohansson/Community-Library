@@ -144,9 +144,9 @@ namespace CommunityLibrary.Controllers
             if (user != null)
             {
                 ViewBag.currentBooks = bookRepo.Books.Where(e => e.Owner == user.UserName).ToList();
-                ViewBag.currentReviews = reviewRepo.Reviews.Where(e => e.Reviewer.UserName == user.UserName).ToList();
+                ViewBag.currentReviews = reviewRepo.Reviews.Where(e => e.Reviewer == user.UserName).ToList();
                 ViewBag.currentRequests = requestRepo.Requests.Where(e => e.Requester == user.UserName).ToList();
-                ViewBag.currentReceived = requestRepo.Requests.Where(e => e.Owner.UserName == user.UserName).ToList();
+                ViewBag.currentReceived = requestRepo.Requests.Where(e => e.Owner == user.UserName).ToList();
                 return View("Index", user);
             }
             else

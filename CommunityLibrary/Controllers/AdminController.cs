@@ -51,10 +51,10 @@ namespace CommunityLibrary.Controllers
             AppUser user = await userManager.GetUserAsync(HttpContext.User);
 
             ViewBag.currentBooks = bookRepo.Books.Where(e => e.Owner == user.UserName).ToList();
-            ViewBag.Reports = reportRepo.Reports.Where(e => e.ReportedUserName.UserName == user.UserName).ToList();
-            ViewBag.currentReviews = reviewRepo.Reviews.Where(e => e.Reviewer.UserName == user.UserName).ToList();
+            ViewBag.Reports = reportRepo.Reports.Where(e => e.ReportedUserName == user.UserName).ToList();
+            ViewBag.currentReviews = reviewRepo.Reviews.Where(e => e.Reviewer == user.UserName).ToList();
             ViewBag.currentRequests = requestRepo.Requests.Where(e => e.Requester == user.UserName).ToList();
-            ViewBag.currentReceived = requestRepo.Requests.Where(e => e.Owner.UserName == user.UserName).ToList();
+            ViewBag.currentReceived = requestRepo.Requests.Where(e => e.Owner == user.UserName).ToList();
             return View(userManager.Users);
         }
 

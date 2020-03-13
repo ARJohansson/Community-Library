@@ -43,7 +43,7 @@ namespace CommunityLibrary.Controllers
 
             if(user != null)
             {
-                ViewBag.userReviews = reviewRepo.Reviews.Where(e => e.Reviewer.UserName == user.UserName).ToList();
+                ViewBag.userReviews = reviewRepo.Reviews.Where(e => e.Reviewer == user.UserName).ToList();
                 if(data != null)
                 {
                     return (ViewBag.userReviews);
@@ -115,7 +115,7 @@ namespace CommunityLibrary.Controllers
                 AppUser user = await userManager.GetUserAsync(HttpContext.User);
                 Review review = new Review()
                 {
-                    Reviewer = user,
+                    Reviewer = user.UserName,
                     ReviewID = reviewID,
                     Text = text,
                     BookTitle = bookTitle,
