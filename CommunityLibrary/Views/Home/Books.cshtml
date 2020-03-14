@@ -8,53 +8,61 @@
 }
 
 <h4>Here are the books we found:</h4>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Book Owner</th>
-            <th>Borrower</th>
-            <th>Written</th>
-            <th>Availability</th>
-            <th>Average Rating</th>
-            <th>Reviews</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if (Model.Count > 0)
+{
+    <p>Click on the cover photo to check out the book's details.</p>
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Author)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Owner)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Borrower)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Written)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Availability)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AverageRating)
-                </td>
-                <td>
-                    @{ ViewBag.reviewsOfBook = reviewRepo.GetReviewsByBook(item); }
-                    <a asp-controller="Review" asp-action="Index" asp-route-id="@item.BookID">@item.Reviews.Count</a>
-                </td>
-                <td>
-                    <a asp-controller="Book" asp-action="Details" asp-route-id="@item.BookID">Details</a> |
-                </td>
+                <th>Cover Photo</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Book Owner</th>
+                <th>Borrower</th>
+                <th>Written</th>
+                <th>Availability</th>
+                <th>Average Rating</th>
+                <th>Reviews</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Book" asp-action="Details" asp-route-id="@item.BookID">
+                            <img src="~/lib/book-covers/@(item.ImgLink).jpg" alt="@item.Title" width="50" height="75">
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Owner)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Borrower)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Written)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Availability)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AverageRating)
+                    </td>
+                    <td>
+                        @{ ViewBag.reviewsOfBook = reviewRepo.GetReviewsByBook(item); }
+                        <a asp-controller="Review" asp-action="Index" asp-route-id="@item.BookID">@item.Reviews.Count</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+} else {
+    <p>We don't have any books with the entered search parameters.</p>
+}

@@ -98,6 +98,7 @@ namespace CommunityLibrary.Controllers
             {
                 Book book = await _context.Books.FindAsync(id);
                 ViewBag.bookTitle = book.Title;
+                ViewBag.bookImg = book.ImgLink;
                 ViewBag.userName = user.UserName;
                 return View();
             }

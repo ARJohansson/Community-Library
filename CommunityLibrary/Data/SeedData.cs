@@ -156,13 +156,15 @@ namespace CommunityLibrary.Data
                 written = new DateTime(2003, 05, 01);
                 imgLink = "weefreemen";
                 CreateBook(context, title, author, owner, written, imgLink);
+
+                context.SaveChanges();
             }
         }
 
         public static void CreateBook(ApplicationDbContext context, string title, string author, string owner, 
             DateTime Written, string imgLink)
         {
-            if (context.Books.Find(title) == null)
+            if (context.Books.Count() == 0)
             {
                 Book book = new Book()
                 {
@@ -174,6 +176,20 @@ namespace CommunityLibrary.Data
                     AverageRating = 4,
                     Availability = true
                 };
+                context.Books.Add(book);
+            } else if(context.Books.First(b => b.Title == title) == null)
+            {
+                Book book = new Book()
+                {
+                    Title = title,
+                    Author = author,
+                    Owner = owner,
+                    Written = Written,
+                    ImgLink = imgLink,
+                    AverageRating = 4,
+                    Availability = true
+                };
+                context.Books.Add(book);
             }
         }
 
@@ -199,6 +215,7 @@ namespace CommunityLibrary.Data
                 {
                     await userManager.AddToRoleAsync(user, role);
                 }
+                context.Users.Add(user);
             }
         }
 

@@ -17,6 +17,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th>Cover Photo</th>
             <th>Title</th>
             <th>Author</th>
             <th>Book Owner</th>
@@ -32,6 +33,11 @@
         @foreach (var item in Model)
         {
         <tr>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.BookID">
+                    <img src="~/lib/book-covers/@(item.ImgLink).jpg" alt="@item.Title" width="150" height="200">
+                </a>
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
