@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CommunityLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200313051436_Identity")]
+    [Migration("20200314080123_Identity")]
     partial class Identity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,9 @@ namespace CommunityLibrary.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Borrower")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImgLink")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Owner")

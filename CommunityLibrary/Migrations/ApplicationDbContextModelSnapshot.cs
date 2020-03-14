@@ -38,6 +38,9 @@ namespace CommunityLibrary.Migrations
                     b.Property<string>("Borrower")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImgLink")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Owner")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

@@ -12,6 +12,7 @@ namespace CommunityLibrary.Models
         private List<Request> requests = new List<Request>();
 
         public int BookID { get; set; }
+        public string ImgLink { get; set; }
 
         [Required(ErrorMessage= "Your book must have a title.")]
         [StringLength(100, MinimumLength = 2)]

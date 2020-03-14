@@ -12,6 +12,11 @@ namespace CommunityLibrary.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
+                name: "ImgLink",
+                table: "Books",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
                 name: "Name",
                 table: "AspNetUsers",
                 nullable: true);
@@ -49,6 +54,10 @@ namespace CommunityLibrary.Migrations
             migrationBuilder.DropColumn(
                 name: "ReporterId",
                 table: "Reports");
+
+            migrationBuilder.DropColumn(
+                name: "ImgLink",
+                table: "Books");
 
             migrationBuilder.DropColumn(
                 name: "Name",
