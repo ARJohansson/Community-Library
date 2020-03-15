@@ -29,18 +29,40 @@ namespace CommunityLibrary.Controllers
         }
 
         // GET: Requests
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? data)
         {
             AppUser user = await userManager.GetUserAsync(HttpContext.User);
-            if (requestRepo.CheckForOwnerName(user.UserName))
+            if (data == null)
             {
-                ViewBag.requestsReceived = requestRepo.Requests.Where(e => e.Owner == user.UserName);
-            }
-            else if (requestRepo.CheckForRequesterName(user.UserName))
+                if (requestRepo.CheckForOwnerName(user.UserName))
+                {
+                    ViewBag.requestsReceived = requestRepo.Requests.Where(e => e.Owner == user.UserName);
+                }
+                else if (requestRepo.CheckForRequesterName(user.UserName))
+                {
+                    ViewBag.requestsSent = requestRepo.Requests.Where(e => e.Requester == user.UserName);
+                }
+                return View(await _context.Requests.ToListAsync());
+            }else if(data == "requests")
             {
-                ViewBag.requestsSent = requestRepo.Requests.Where(e => e.Requester == user.UserName);
+                if (requestRepo.CheckForRequesterName(user.UserName))
+                {
+                    ViewBag.requestsSent = requestRepo.Requests.Where(e => e.Requester == user.UserName);
+                    return View(ViewBag.requestsSent);
+                }
+                else 
+                    return NotFound();
             }
-            return View(await _context.Requests.ToListAsync());
+            else
+            {
+                if (requestRepo.CheckForOwnerName(user.UserName))
+                {
+                    ViewBag.requestsReceived = requestRepo.Requests.Where(e => e.Owner == user.UserName);
+                    return View(ViewBag.requestsReceived);
+                }
+                else
+                    return NotFound();
+            }
         }
 
         // GET: Requests/Create

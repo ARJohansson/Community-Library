@@ -54,7 +54,7 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.AverageRating)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-2">
             @{ ViewBag.reviewsOfBook = reviewRepo.GetReviewsByBook(Model);
                 ViewBag.avgBookRating = CommunityLibrary.Controllers.BookController.AverageBookRating(Model); }
             <table class="table table-borderless table-sm text-left">

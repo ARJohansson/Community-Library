@@ -17,16 +17,16 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Cover Photo</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Book Owner</th>
-            <th>Borrower</th>
-            <th>Written</th>
-            <th>Availability</th>
-            <th>Reviews</th>
-            <th>Average Rating</th>
-            <th></th>
+            <th> Cover Photo </th>
+            <th> Title </th>
+            <th> Author </th>
+            <th> Book Owner </th>
+            <th> Borrower </th>
+            <th> Written </th>
+            <th> Availability </th>
+            <th> Reviews </th>
+            <th> Average Rating </th>
+            <th>            </th>
         </tr>
     </thead>
     <tbody>
@@ -76,21 +76,21 @@
                 </table>
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.BookID">Details</a>
+                <p><a asp-action="Details" asp-route-id="@item.BookID">Details</a></p>
                 @if (User?.Identity?.IsAuthenticated ?? false)
                 {
-                    <p> | <a asp-controller="Review" asp-action="Create" asp-route-id="@item.BookID">Review</a></p>
+                    <p><a asp-controller="Review" asp-action="Create" asp-route-id="@item.BookID">Review</a></p>
                     if (ViewBag.userBooks.Contains(item))
                     {
                         <p>
-                            |  <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a> |
-                            <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
+                            | <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a>
+                            | <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
                         </p>
                     }
                     else
                     {
                         <p>
-                            | <a asp-action="Details" asp-route-id="@item.BookID">Request</a>
+                            <a asp-action="Details" asp-route-id="@item.BookID">Request</a>
                         </p>
                     }
                 }

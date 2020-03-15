@@ -35,8 +35,7 @@ namespace CommunityLibrary.Controllers
             if(ViewBag.currentBooks.Count > 5)
             {
                 List<Book> books = ViewBag.currentBooks;
-                books.Take(5);
-                ViewBag.currentBooks = books;
+                ViewBag.currentBooks = books.Take(5);
             }
             return View();
         }

@@ -21,6 +21,15 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="ImgLink" class="control-label">Select a book cover</label>
+                <select id="select" asp-for="ImgLink">
+                    <option value="1">Black</option>
+                    <option value="2">Blue</option>
+                    <option value="3">Red</option>
+                    <option value="4">Green</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label asp-for="Author" class="control-label"></label>
                 <input asp-for="Author" class="form-control" />
                 <span asp-validation-for="Author" class="text-danger"></span>

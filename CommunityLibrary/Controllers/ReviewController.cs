@@ -175,6 +175,7 @@ namespace CommunityLibrary.Controllers
                     {
                         review.ReviewRating = reviewRating;
                         _context.Update(review);
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
