@@ -44,10 +44,32 @@
                 <a asp-controller="Book" asp-action="Details" asp-route-data="@item.BookTitle">@Html.DisplayFor(modelItem => item.BookTitle)</a>
 </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BookRating)
+                <table class="table table-borderless table-sm text-left">
+                    <tr>
+                        @for (int i = 1; i <= item.BookRating; i++)
+                        {
+                            <td><img src="~/lib/star-rating/filledstar.png" alt="(*)" width="20" height="20"></td>
+                        }
+                        @for (int i = 1; i <= (5 - item.BookRating); i++)
+                        {
+                            <td><img src="~/lib/star-rating/emptystar.png" alt="( )" width="20" height="20"></td>
+                        }
+                    </tr>
+                </table>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ReviewRating)
+                <table class="table table-borderless table-sm text-left">
+                    <tr>
+                        @for (int i = 1; i <= item.ReviewRating; i++)
+                        {
+                            <td><img src="~/lib/star-rating/filledstar.png" alt="(*)" width="20" height="20"></td>
+                        }
+                        @for (int i = 1; i <= (5 - item.ReviewRating); i++)
+                        {
+                            <td><img src="~/lib/star-rating/emptystar.png" alt="( )" width="20" height="20"></td>
+                        }
+                    </tr>
+                </table>
             </td>
             <td>
                 @if (User?.Identity?.IsAuthenticated ?? false)

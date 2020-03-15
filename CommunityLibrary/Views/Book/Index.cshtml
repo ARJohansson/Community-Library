@@ -62,7 +62,18 @@
             </td>
             <td>
                 @{ ViewBag.avgBookRating = CommunityLibrary.Controllers.BookController.AverageBookRating(item); }
-                @Html.DisplayFor(modelItem => item.AverageRating)
+                <table class="table table-borderless table-sm text-left">
+                    <tr>
+                        @for (int i = 1; i <= item.AverageRating; i++)
+                        {
+                            <td><img src="~/lib/star-rating/filledstar.png" alt="(*)" width="20" height="20"></td>
+                        }
+                        @for (int i = 1; i <= (5 - item.AverageRating); i++)
+                        {
+                            <td><img src="~/lib/star-rating/emptystar.png" alt="( )" width="20" height="20"></td>
+                        }
+                    </tr>
+                </table>
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.BookID">Details</a>

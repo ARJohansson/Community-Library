@@ -57,7 +57,18 @@
         <dd class="col-sm-10">
             @{ ViewBag.reviewsOfBook = reviewRepo.GetReviewsByBook(Model);
                 ViewBag.avgBookRating = CommunityLibrary.Controllers.BookController.AverageBookRating(Model); }
-            @Html.DisplayFor(model => model.AverageRating)
+            <table class="table table-borderless table-sm text-left">
+                <tr>
+                    @for (int i = 1; i <= Model.AverageRating; i++)
+                    {
+                        <td><img src="~/lib/star-rating/filledstar.png" alt="(*)" width="20" height="20"></td>
+                    }
+                    @for (int i = 1; i <= (5 - Model.AverageRating); i++)
+                    {
+                        <td><img src="~/lib/star-rating/emptystar.png" alt="( )" width="20" height="20"></td>
+                    }
+                </tr>
+            </table>
         </dd>
     </dl>
 </div>

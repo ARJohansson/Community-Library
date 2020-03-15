@@ -27,11 +27,33 @@
         </dd>
         <dt class="col-sm-2"> Book Rating </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.BookRating)
+            <table class="table table-borderless table-sm text-left">
+                <tr>
+                    @for (int i = 1; i <= Model.BookRating; i++)
+                    {
+                        <td><img src="~/lib/star-rating/filledstar.png" alt="(*)" width="20" height="20"></td>
+                    }
+                    @for (int i = 1; i <= (5 - Model.BookRating); i++)
+                    {
+                        <td><img src="~/lib/star-rating/emptystar.png" alt="( )" width="20" height="20"></td>
+                    }
+                </tr>
+            </table>
         </dd>
         <dt class="col-sm-2"> Current Review Rating </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ReviewRating)
+            <table class="table table-borderless table-sm text-left">
+                <tr>
+                    @for (int i = 1; i <= Model.ReviewRating; i++)
+                    {
+                        <td><img src="~/lib/star-rating/filledstar.png" alt="(*)" width="20" height="20"></td>
+                    }
+                    @for (int i = 1; i <= (5 - Model.ReviewRating); i++)
+                    {
+                        <td><img src="~/lib/star-rating/emptystar.png" alt="( )" width="20" height="20"></td>
+                    }
+                </tr>
+            </table>
         </dd>
     </dl>
 </div>
@@ -42,9 +64,27 @@
             <input type="hidden" asp-for="ReviewID" />
             <div class="form-group">
                 <label asp-for="ReviewRating" class="control-label"></label>
-                <input asp-for="ReviewRating" class="form-control" />
-                <span asp-validation-for="ReviewRating" class="text-danger"></span>
+                <table class="table table-borderless table-sm text-center">
+                    <tr>
+                        <td>
+                            <label><input class="form-check-input" asp-for="ReviewRating" value="1" type="radio" /></label>
+                        </td>
+                        <td>
+                            <label><input class="form-check-input" asp-for="ReviewRating" value="2" type="radio" /></label>
+                        </td>
+                        <td>
+                            <label><input class="form-check-input" asp-for="ReviewRating" value="3" type="radio" /></label>
+                        </td>
+                        <td>
+                            <label><input class="form-check-input" asp-for="ReviewRating" value="4" type="radio" /></label>
+                        </td>
+                        <td>
+                            <label><input class="form-check-input" asp-for="ReviewRating" value="5" type="radio" /></label>
+                        </td>
+                    </tr>
+                </table>
             </div>
+            <hr />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
