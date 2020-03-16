@@ -66,8 +66,12 @@ namespace CommunityLibrary.Controllers
         }
 
         // GET: Requests/Create
-        public IActionResult Create(int id)
+        public IActionResult Create(int? id)
         {
+            if(id == null)
+            {
+                return NotFound();
+            }
             Book book = _context.Books.Find(id);
             ViewBag.thisBook = book.Title;
             ViewBag.bookOwner = book.Owner;

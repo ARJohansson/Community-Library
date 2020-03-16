@@ -10,11 +10,17 @@ namespace CommunityLibrary.Models
     {
         public int RequestID { get; set; }
         [Required]
+        [RegularExpression(@"^(([A-za-z]+[\s]{1}[A-za-z]+)|([A-Za-z]+))$")]
         public string Requester { get; set; }
         [Required]
+        [RegularExpression(@"^(([A-za-z]+[\s]{1}[A-za-z]+)|([A-Za-z]+))$")]
         public string Owner { get; set; }
+
         [Required]
+        [StringLength(100, MinimumLength = 2)]
+        [RegularExpression(@"[^/}{)(><=][^\.\.][^./]+$")]
         public string BookTitle { get; set; }
+
         [Required]
         public string Duration { get; set; }
         public bool Accepted { get; set; }
