@@ -18,8 +18,11 @@
             <input type="hidden" asp-for="RequestID" />
             <div class="form-group">
                 <label asp-for="Duration" class="control-label"></label>
-                <input asp-for="Duration" class="form-control" />
-                <span asp-validation-for="Duration" class="text-danger"></span>
+                <select id="select" asp-for="Duration">
+                    <option value="1 week">1 week</option>
+                    <option value="2 weeks">2 weeks</option>
+                    <option value="3 weeks">3 weeks</option>
+                </select>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">

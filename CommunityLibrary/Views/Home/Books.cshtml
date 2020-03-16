@@ -53,7 +53,18 @@
                         @Html.DisplayFor(modelItem => item.Availability)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.AverageRating)
+                        <table class="table table-borderless table-sm text-left">
+                            <tr>
+                                @for (int i = 1; i <= item.AverageRating; i++)
+                                {
+                                    <td><img src="~/lib/star-rating/filledstar.png" alt="(*)" width="20" height="20"></td>
+                                }
+                                @for (int i = 1; i <= (5 - item.AverageRating); i++)
+                                {
+                                    <td><img src="~/lib/star-rating/emptystar.png" alt="( )" width="20" height="20"></td>
+                                }
+                            </tr>
+                        </table>
                     </td>
                     <td>
                         @{ ViewBag.reviewsOfBook = reviewRepo.GetReviewsByBook(item); }

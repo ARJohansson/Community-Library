@@ -16,10 +16,15 @@ namespace CommunityLibrary.Models
 
         [Required(ErrorMessage= "Your book must have a title.")]
         [StringLength(100, MinimumLength = 2)]
+        [RegularExpression(@"[^/}{)(><=][^\.\.][^./]+$")]
         public string Title { get; set; }
+
+        [RegularExpression(@"^([A-za-z]+[\s]{1}[A-za-z]+)|([A-Za-z]+)|([A-Z.\s]+[a-z]{0,})$")]
         public string Author { get; set; }
         [Required]
+        [RegularExpression(@"^(([A-za-z]+[\s]{1}[A-za-z]+)|([A-Za-z]+))$")]
         public string Owner { get; set; }
+        [RegularExpression(@"^(([A-za-z]+[\s]{1}[A-za-z]+)|([A-Za-z]+))$")]
         public string Borrower { get; set; }
 
         [Required]

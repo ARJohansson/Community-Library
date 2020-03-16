@@ -32,12 +32,13 @@
     <p>If you want to check out more information on a specific book, just click the picture.</p>
     @foreach (Book item in ViewBag.currentBooks)
     {
-<p>
-    <a asp-controller="Book" asp-action="Details" asp-route-id="@item.BookID">
-        <img src="~/lib/book-covers/@(item.ImgLink).jpg" alt="@item.Title" width="75" height="100"> 
-    </a>
-    | Title: @item.Title | Author: @item.Author | 
-    Average Rating: @item.AverageRating | Review(s): @item.Reviews.Count
-</p>
+        <hr />
+        <p class="text-left">
+            <a asp-controller="Book" asp-action="Details" asp-route-id="@item.BookID">
+                <img src="~/lib/book-covers/@(item.ImgLink).jpg" alt="@item.Title" width="75" height="100">
+            </a>
+            | Title: @item.Title | Author: @item.Author |
+            Average Rating: @item.AverageRating | Review(s): @item.Reviews.Count
+        </p>
     }
 </div>

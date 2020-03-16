@@ -7,12 +7,8 @@
 }
 
 <h1>Index</h1>
-@if (User?.Identity?.IsAuthenticated ?? false)
-{
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-}
+<p>If you would like to look at the book more closely, just click the book cover image.</p>
+<hr />
 <table class="table">
     <thead>
         <tr>
@@ -22,7 +18,7 @@
             <th> Book           </th>
             <th> Book Rating    </th>
             <th> Review Rating  </th>
-            <th></th>
+            <th>                </th>
         </tr>
     </thead>
     <tbody>
@@ -41,29 +37,49 @@
                 @Html.DisplayFor(modelItem => item.Text)
             </td>
             <td>
-                <a asp-controller="Book" asp-action="Details" asp-route-data="@item.BookTitle">@Html.DisplayFor(modelItem => item.BookTitle)</a>
-</td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BookRating)
+                @Html.DisplayFor(modelItem => item.BookTitle)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ReviewRating)
+                <table class="table table-borderless table-sm text-left">
+                    <tr>
+                        @for (int i = 1; i <= item.BookRating; i++)
+                        {
+                            <td><img src="~/lib/star-rating/filledstar.png" alt="(*)" width="20" height="20"></td>
+                        }
+                        @for (int i = 1; i <= (5 - item.BookRating); i++)
+                        {
+                            <td><img src="~/lib/star-rating/emptystar.png" alt="( )" width="20" height="20"></td>
+                        }
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table class="table table-borderless table-sm text-left">
+                    <tr>
+                        @for (int i = 1; i <= item.ReviewRating; i++)
+                        {
+                            <td><img src="~/lib/star-rating/filledstar.png" alt="(*)" width="20" height="20"></td>
+                        }
+                        @for (int i = 1; i <= (5 - item.ReviewRating); i++)
+                        {
+                            <td><img src="~/lib/star-rating/emptystar.png" alt="( )" width="20" height="20"></td>
+                        }
+                    </tr>
+                </table>
             </td>
             <td>
                 @if (User?.Identity?.IsAuthenticated ?? false)
                 {
-                    <p> <a asp-action="RateReview" asp-route-id="@item.ReviewID">Rate this Review</a> </p>
                     @if (ViewBag.userReviews.Contains(item))
                     {
                         <p>
-                            |<a asp-action="Delete" asp-route-id="@item.ReviewID">Delete</a>
+                            <a asp-action="Delete" asp-route-id="@item.ReviewID">Delete</a>
                         </p>
                     }
                     else
                     {
-                        <p>
-                            |<a asp-controller="Report" asp-action="Create" asp-route-id="@item.ReviewID">Report Review</a>
-                        </p>
+                        <p><a asp-action="RateReview" asp-route-id="@item.ReviewID">Rate this Review</a> </p>
+                        <p><a asp-controller="Report" asp-action="Create" asp-route-id="@item.ReviewID">Report Review</a></p>
                     }
                 }
             </td>

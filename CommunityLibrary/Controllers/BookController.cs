@@ -95,8 +95,19 @@ namespace CommunityLibrary.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Users,Admins")]
-        public async Task<IActionResult> Create([Bind("BookID,Title,Author,Owner,Borrower,Written,Availability,AverageRating")] Book book)
+        public async Task<IActionResult> Create([Bind("BookID,Title,ImgLink,Author,Owner,Borrower,Written,Availability,AverageRating")] Book book)
         {
+            string link;
+            if (book.ImgLink == "1")
+                link = "genericblack";
+            else if (book.ImgLink == "1")
+                link = "genericblue";
+            else if (book.ImgLink == "1")
+                link = "genericred";
+            else
+                link = "genericgreen";
+            book.ImgLink = link;
+
             if (ModelState.IsValid)
             {
                 AppUser user = await userManager.GetUserAsync(HttpContext.User);
@@ -133,12 +144,23 @@ namespace CommunityLibrary.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Users,Admins")]
-        public async Task<IActionResult> Edit(int id, [Bind("BookID,Title,Author,Owner,Borrower,Written,Availability,AverageRating")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("BookID,Title,ImgLink,Author,Owner,Borrower,Written,Availability,AverageRating")] Book book)
         {
             if (id != book.BookID)
             {
                 return NotFound();
             }
+
+            string link;
+            if (book.ImgLink == "1")
+                link = "genericblack";
+            else if (book.ImgLink == "1")
+                link = "genericblue";
+            else if (book.ImgLink == "1")
+                link = "genericred";
+            else
+                link = "genericgreen";
+            book.ImgLink = link;
 
             if (ModelState.IsValid)
             {

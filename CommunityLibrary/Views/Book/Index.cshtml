@@ -17,16 +17,16 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Cover Photo</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Book Owner</th>
-            <th>Borrower</th>
-            <th>Written</th>
-            <th>Availability</th>
-            <th>Reviews</th>
-            <th>Average Rating</th>
-            <th></th>
+            <th> Cover Photo </th>
+            <th> Title </th>
+            <th> Author </th>
+            <th> Book Owner </th>
+            <th> Borrower </th>
+            <th> Written </th>
+            <th> Availability </th>
+            <th> Reviews </th>
+            <th> Average Rating </th>
+            <th>            </th>
         </tr>
     </thead>
     <tbody>
@@ -62,24 +62,35 @@
             </td>
             <td>
                 @{ ViewBag.avgBookRating = CommunityLibrary.Controllers.BookController.AverageBookRating(item); }
-                @Html.DisplayFor(modelItem => item.AverageRating)
+                <table class="table table-borderless table-sm text-left">
+                    <tr>
+                        @for (int i = 1; i <= item.AverageRating; i++)
+                        {
+                            <td><img src="~/lib/star-rating/filledstar.png" alt="(*)" width="20" height="20"></td>
+                        }
+                        @for (int i = 1; i <= (5 - item.AverageRating); i++)
+                        {
+                            <td><img src="~/lib/star-rating/emptystar.png" alt="( )" width="20" height="20"></td>
+                        }
+                    </tr>
+                </table>
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.BookID">Details</a>
+                <p><a asp-action="Details" asp-route-id="@item.BookID">Details</a></p>
                 @if (User?.Identity?.IsAuthenticated ?? false)
                 {
-                    <p> | <a asp-controller="Review" asp-action="Create" asp-route-id="@item.BookID">Review</a></p>
+                    <p><a asp-controller="Review" asp-action="Create" asp-route-id="@item.BookID">Review</a></p>
                     if (ViewBag.userBooks.Contains(item))
                     {
                         <p>
-                            |  <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a> |
-                            <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
+                            | <a asp-action="Edit" asp-route-id="@item.BookID">Edit</a>
+                            | <a asp-action="Delete" asp-route-id="@item.BookID">Delete</a>
                         </p>
                     }
                     else
                     {
                         <p>
-                            | <a asp-action="Details" asp-route-id="@item.BookID">Request</a>
+                            <a asp-action="Details" asp-route-id="@item.BookID">Request</a>
                         </p>
                     }
                 }

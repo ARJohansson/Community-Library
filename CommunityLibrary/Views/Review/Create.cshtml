@@ -31,9 +31,27 @@
             </div>
             <div class="form-group">
                 <label asp-for="BookRating" class="control-label"></label>
-                <input asp-for="BookRating" class="form-control" />
-                <span asp-validation-for="BookRating" class="text-danger"></span>
+                <table class="table table-borderless table-sm text-center">
+                    <tr>
+                        <td>
+                            <label><input class="form-check-input" asp-for="BookRating" value="1" type="radio" /></label>
+                        </td>
+                        <td>
+                            <label><input class="form-check-input" asp-for="BookRating" value="2" type="radio" /></label>
+                        </td>
+                        <td>
+                            <label><input class="form-check-input" asp-for="BookRating" value="3" type="radio" /></label>
+                        </td>
+                        <td>
+                            <label><input class="form-check-input" asp-for="BookRating" value="4" type="radio" /></label>
+                        </td>
+                        <td>
+                            <label><input class="form-check-input" asp-for="BookRating" value="5" type="radio" /></label>
+                        </td>
+                    </tr>
+                </table>
             </div>
+            <hr />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

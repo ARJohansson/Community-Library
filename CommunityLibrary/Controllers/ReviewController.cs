@@ -46,7 +46,7 @@ namespace CommunityLibrary.Controllers
                 ViewBag.userReviews = reviewRepo.Reviews.Where(e => e.Reviewer == user.UserName).ToList();
                 if(data != null)
                 {
-                    return (ViewBag.userReviews);
+                    return View(ViewBag.userReviews);
                 }
                 else if (data is null)
                 {
@@ -175,6 +175,7 @@ namespace CommunityLibrary.Controllers
                     {
                         review.ReviewRating = reviewRating;
                         _context.Update(review);
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
