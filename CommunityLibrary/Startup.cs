@@ -119,6 +119,8 @@ namespace CommunityLibrary
 
             ApplicationDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
             ApplicationDbContext.CreateTestUserAccount(app.ApplicationServices, Configuration).Wait();
+
+            SeedData.Seed(context, Configuration, app.ApplicationServices).Wait();
         }
     }
 }

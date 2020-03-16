@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
     string title = "Title";
-    if(ViewBag.bookTitle != null)
+    if (ViewBag.bookTitle != null)
     {
         title = ViewBag.bookTitle;
     }
@@ -14,6 +14,7 @@
 
 <h4>Review</h4>
 <hr />
+<img src="~/lib/book-covers/@(ViewBag.bookImg).jpg" alt="@title" width="150" height="200">
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" asp-route-userName="@ViewBag.userName">
