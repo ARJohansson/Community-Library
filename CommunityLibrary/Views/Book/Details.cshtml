@@ -75,14 +75,17 @@
 <div>
     @if (User?.Identity?.IsAuthenticated ?? false)
     {
-        <p>
-            <a asp-action="Edit" asp-route-id="@Model.BookID">Edit</a> |
-        </p>
         @if (Model.Availability == true && user.UserName != Model.Owner)
         {
             <p>
                 <a asp-controller="Request" asp-action="Create" asp-route-id="@Model.BookID">Request Book</a> |
                 <a asp-controller="Review" asp-action="Create" asp-route-id="@Model.BookID">Review Book</a> |
+            </p>
+        }
+        else
+        {
+            <p>
+                <a asp-action="Edit" asp-route-id="@Model.BookID">Edit</a> 
             </p>
         }
     }
