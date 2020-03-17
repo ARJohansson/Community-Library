@@ -5,9 +5,6 @@
 }
 
 <body>
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
 
     <h2>Create a new user here and get started with your book sharing!</h2>
 
@@ -27,7 +24,6 @@
 
         <label asp-for="Password">Password</label>
         <input asp-for="Password" /><br />
-        <span asp-validation-for="Password"></span> <br />
 
         <input type="submit" value="Enter" />
     </form>

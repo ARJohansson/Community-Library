@@ -35,6 +35,7 @@ namespace CommunityLibrary.Controllers
             requestRepo = requestR;
         }
 
+        // Returns List of all Reports, only Admins can see this list
         [Authorize(Roles = "Admins")]
         // GET: Reports
         public async Task<IActionResult> Index()
@@ -42,6 +43,8 @@ namespace CommunityLibrary.Controllers
             return View(await _context.Reports.ToListAsync());
         }
 
+        // Returns the details for a reported user, only Admins can see this view
+        [Authorize(Roles = "Admins")]
         // GET: Reports/Details/5
         public async Task<IActionResult> UserDetails(string? id)
         {
@@ -56,6 +59,7 @@ namespace CommunityLibrary.Controllers
                 return NotFound();
             }
 
+            // ViewBags store the specific user's information
             ViewBag.userReports = reportRepo.Reports.Where(e => e.ReportedUserName == user.UserName).ToList();
             ViewBag.userBooks = bookRepo.Books.Where(e => e.Owner == user.UserName).ToList();
             ViewBag.userReviews = reviewRepo.Reviews.Where(e => e.Reviewer == user.UserName).ToList();
@@ -65,6 +69,8 @@ namespace CommunityLibrary.Controllers
             return View(user);
         }
 
+        // Returns Create View based on a review id, cannot create a 
+        // report without a review -- for now
         // GET: Reports/Create
         public async Task<IActionResult> Create(int id)
         {
@@ -77,9 +83,8 @@ namespace CommunityLibrary.Controllers
             return View();
         }
 
+        // Creates a new Report
         // POST: Reports/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ReportedUserName,ReportID,Reason,Details")] Report report)
@@ -108,7 +113,9 @@ namespace CommunityLibrary.Controllers
             return View(report);
         }
 
+        // Returns Edit page for report, only Admins can access this page
         // GET: Reports/Edit/5
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -124,10 +131,10 @@ namespace CommunityLibrary.Controllers
             return View(report);
         }
 
+        // Edits a report, only Admins can access this page
         // POST: Reports/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admins")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ReportID,Reason,Details")] Report report)
         {
@@ -159,34 +166,35 @@ namespace CommunityLibrary.Controllers
             return View(report);
         }
 
-        // GET: Reports/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        /********* Not Currently Implemented *********/
+        //// GET: Reports/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var report = await _context.Reports
-                .FirstOrDefaultAsync(m => m.ReportID == id);
-            if (report == null)
-            {
-                return NotFound();
-            }
+        //    var report = await _context.Reports
+        //        .FirstOrDefaultAsync(m => m.ReportID == id);
+        //    if (report == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(report);
-        }
+        //    return View(report);
+        //}
 
-        // POST: Reports/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var report = await _context.Reports.FindAsync(id);
-            _context.Reports.Remove(report);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //// POST: Reports/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var report = await _context.Reports.FindAsync(id);
+        //    _context.Reports.Remove(report);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private bool ReportExists(int id)
         {

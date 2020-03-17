@@ -36,6 +36,8 @@ namespace CommunityLibrary.Controllers
         }
 
         // GET: Books
+        // Returns a list of books, either all of them, or the ones owned by the 
+        // current user
         [AllowAnonymous]
         public async Task<IActionResult> Index(string? data)
         {
@@ -52,9 +54,10 @@ namespace CommunityLibrary.Controllers
             return View(await _context.Books.ToListAsync());
         }
 
+        // Returns a specific book based on the received id, or title (data)
         [AllowAnonymous]
         // GET: Books/Details/5
-        public async Task<IActionResult> Details(int? id, string? data)
+        public async Task<IActionResult> Details(int? id, string data)
         {
             if (bookRepo.CheckForBookByTitle(data))
             {
@@ -90,8 +93,7 @@ namespace CommunityLibrary.Controllers
         }
 
         // POST: Books/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Creates a new book
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Users,Admins")]
@@ -139,8 +141,7 @@ namespace CommunityLibrary.Controllers
         }
 
         // POST: Books/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Edits an existing book
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Users,Admins")]
@@ -216,11 +217,14 @@ namespace CommunityLibrary.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Checks if a book exists based on its id
         private bool BookExists(int id)
         {
             return _context.Books.Any(e => e.BookID == id);
         }
 
+        // Calculates the average rating for a given book so long as the book
+        // has one review or more. Otherwise just returns rating from creation data
         public static int AverageBookRating(Book currentBook)
         {
             int sum = 0;

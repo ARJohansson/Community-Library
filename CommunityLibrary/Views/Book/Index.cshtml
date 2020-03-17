@@ -3,7 +3,7 @@
 @inject IReviewRepo reviewRepo
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Books";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -35,7 +35,7 @@
         <tr>
             <td>
                 <a asp-action="Details" asp-route-id="@item.BookID">
-                    <img src="~/lib/book-covers/@(item.ImgLink).jpg" alt="@item.Title" width="150" height="200">
+                    <img src="~/lib/book-covers/@(item.ImgLink).jpg" alt="@item.Title" width="100" height="150">
                 </a>
             </td>
             <td>

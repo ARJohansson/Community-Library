@@ -1,4 +1,9 @@
 ﻿@model IEnumerable<AppUser>
+@inject UserManager<AppUser> userManager
+@inject IBookRepo bookRepo
+@inject IReviewRepo reviewRepo
+@inject IReportRepo reportRepo
+@inject IRequestRepo requestRepo
 
 @{
 }
@@ -26,26 +31,30 @@
     {
         foreach (AppUser user in Model)
         {
-<tr>
-    <td>@user.UserName</td>
-    <td>@user.Email</td>
-    <td>@ViewBag.Reports.Count</td>
-    <td>@ViewBag.currentBooks.Count</td>
-    <td>@ViewBag.currentReviews.Count</td>
-    <td>@ViewBag.currentRequests.Count</td>
-    <td>@ViewBag.currentReceived.Count</td>
-    <td>@user.Id</td>
-    <td>
-        <form asp-action="Delete" asp-route-id="@user.Id" method="post">
-            <a class="btn btn-sm btn-primary" asp-action="Edit"
-               asp-route-id="@user.Id">Edit</a>
-            <button type="submit"
-                    class="btn btn-sm btn-danger">
-                Delete
-            </button>
-        </form>
-    </td>
-</tr>
+            { 
+                ViewBag.currentBooks = bookRepo.Books.Where(e => e.Owner == user.UserName).ToList();
+                ViewBag.Reports = reportRepo.Reports.Where(e => e.ReportedUserName == user.UserName).ToList();
+                ViewBag.currentReviews = reviewRepo.Reviews.Where(e => e.Reviewer == user.UserName).ToList();
+                ViewBag.currentRequests = requestRepo.Requests.Where(e => e.Requester == user.UserName).ToList();
+                ViewBag.currentReceived = requestRepo.Requests.Where(e => e.Owner == user.UserName).ToList();
+            }
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@ViewBag.Reports.Count</td>
+                <td>@ViewBag.currentBooks.Count</td>
+                <td>@ViewBag.currentReviews.Count</td>
+                <td>@ViewBag.currentRequests.Count</td>
+                <td>@ViewBag.currentReceived.Count</td>
+                <td>@user.Id</td>
+                <td>
+                    <form asp-action="Delete" asp-route-id="@user.Id" method="post">
+                        <a class="btn btn-sm btn-primary" asp-action="Edit"
+                            asp-route-id="@user.Id">Edit</a>
+                        <button type="submit" class="btn btn-sm btn-danger"> Delete</button>
+                    </form>
+                </td>
+            </tr>
         }
     }
 </table>

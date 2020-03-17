@@ -37,6 +37,7 @@ namespace CommunityLibrary.Controllers
 
         [AllowAnonymous]
         // GET: Reviews
+        // Returns a list of reviews depending on the paramaters data and id
         public async Task<IActionResult> Index(string? data, int? id)
         {
             AppUser user = await userManager.GetUserAsync(HttpContext.User);
@@ -44,59 +45,49 @@ namespace CommunityLibrary.Controllers
             if(user != null)
             {
                 ViewBag.userReviews = reviewRepo.Reviews.Where(e => e.Reviewer == user.UserName).ToList();
+                // If data is not null then return reviews that the current user wrote
                 if(data != null)
                 {
                     return View(ViewBag.userReviews);
                 }
-                else if (data is null)
+            }
+            // if id is not null then return reviews based on the selected book
+            else if (id != null)
+            {
+                Book book = await _context.Books.FirstOrDefaultAsync(b => b.BookID == id);
+                if (book != null)
                 {
-                    return View(await _context.Reviews.ToListAsync());
-                }
-
-                if (id != null)
-                {
-                    Book book = await _context.Books.FirstOrDefaultAsync(b => b.BookID == id);
                     ViewBag.bookReviews = reviewRepo.Reviews.Where(e => e.BookTitle == book.Title).ToList();
-                    return (ViewBag.bookRevies);
+                    return View(ViewBag.bookReviews);
                 }
                 else
-                {
-                    return View(await _context.Reviews.ToListAsync());
-                }
+                    return NotFound();
+            }
+            // otherwise return all reviews
+            else
+            {
+                return View(await _context.Reviews.ToListAsync());
             }
 
             return View(await _context.Reviews.ToListAsync());
         }
 
-        // GET: Reviews/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var review = await _context.Reviews
-                .FirstOrDefaultAsync(m => m.ReviewID == id);
-            if (review == null)
-            {
-                return NotFound();
-            }
-
-            return View(review);
-        }
-
+        // Returns the Create View but only if the book id is valid
         // GET: Reviews/Create
         public async Task<IActionResult> Create(int? id)
         {
             AppUser user = await userManager.GetUserAsync(HttpContext.User);
             if (id == null)
             {
-                return View();
+                return NotFound();
             }
             else
             {
                 Book book = await _context.Books.FindAsync(id);
+                if(book == null)
+                {
+                    return NotFound();
+                }
                 ViewBag.bookTitle = book.Title;
                 ViewBag.bookImg = book.ImgLink;
                 ViewBag.userName = user.UserName;
@@ -105,12 +96,16 @@ namespace CommunityLibrary.Controllers
         }
 
         // POST: Reviews/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Creats a new review
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int reviewID, string text, string bookTitle, int bookRating)
         {
+            if(_context.Books.Find(bookTitle) == null || bookRepo.CheckForBookByTitle(bookTitle) == false)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 AppUser user = await userManager.GetUserAsync(HttpContext.User);
@@ -122,22 +117,19 @@ namespace CommunityLibrary.Controllers
                     BookTitle = bookTitle,
                     BookRating = bookRating
                 };
-                
-                if (bookRepo.CheckForBookByTitle(review.BookTitle))
-                {
-                    Book book = bookRepo.GetBookByTitle(review.BookTitle);
-                    book.Reviews.Add(review);
-                    _context.Add(review);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }else
-                {
-                    return NotFound();
-                }
+
+                Book book = bookRepo.GetBookByTitle(review.BookTitle);
+                book.Reviews.Add(review);
+                _context.Add(review);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+
             }
             return NotFound();
         }
 
+        // Returns the Rate Review Page if the id is valid, the reviewer cannot rate
+        // their own review
         // GET: Reviews/RateReview/5
         public async Task<IActionResult> RateReview(int? id)
         {
@@ -155,8 +147,7 @@ namespace CommunityLibrary.Controllers
         }
 
         // POST: Reviews/RateReview/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // rates a user's review 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RateReview(int id, int reviewRating)
@@ -169,39 +160,28 @@ namespace CommunityLibrary.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                // if the review has not been rated before then reset the review rating to the input
+                if (review.ReviewRating == 0)
                 {
-                    if (review.ReviewRating == 0)
-                    {
-                        review.ReviewRating = reviewRating;
-                        _context.Update(review);
-                        await _context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        int avg = (review.ReviewRating + reviewRating) / 2;
-                        review.ReviewRating = avg;
-                        _context.Update(review);
-                        await _context.SaveChangesAsync();
-                    }
-                }
-                catch (DbUpdateConcurrencyException)
+                    review.ReviewRating = reviewRating;
+                    _context.Update(review);
+                    await _context.SaveChangesAsync();
+                } // if the review has been rated find the average between the two numbers
+                else
                 {
-                    if (!ReviewExists(review.ReviewID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    int avg = (review.ReviewRating + reviewRating) / 2;
+                    review.ReviewRating = avg;
+                    _context.Update(review);
+                    await _context.SaveChangesAsync();
                 }
+                // Return to the review index
                 return RedirectToAction(nameof(Index));
             }
             return View(review);
         }
 
         // GET: Reviews/Delete/5
+        // Deletes a review. Only the reviewer can delete the review.
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -212,7 +192,7 @@ namespace CommunityLibrary.Controllers
             var review = await _context.Reviews
                 .FirstOrDefaultAsync(m => m.ReviewID == id);
             Book book = bookRepo.GetBookByTitle(review.BookTitle);
-            if (review == null)
+            if (review == null || book == null)
             {
                 return NotFound();
             }

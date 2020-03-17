@@ -28,43 +28,60 @@ namespace CommunityLibrary.Controllers
             requestRepo = requestR;
         }
 
+        // Returns a list of requests depending on paramater variable data.
         // GET: Requests
-        public async Task<IActionResult> Index(string? data)
+        public async Task<IActionResult> Index(string data)
         {
             AppUser user = await userManager.GetUserAsync(HttpContext.User);
+            List<Request> received = new List<Request>();
+            List<Request> requests = new List<Request>();
+            // If data == null returns the list of all requests that are related to the user
             if (data == null)
             {
+                List<Request> userRequests = new List<Request>();
                 if (requestRepo.CheckForOwnerName(user.UserName))
                 {
-                    ViewBag.requestsReceived = requestRepo.Requests.Where(e => e.Owner == user.UserName);
+                    received = requestRepo.Requests.Where(e => e.Owner == user.UserName).ToList();
+                    foreach(Request r in received)
+                    {
+                        userRequests.Add(r);
+                    }
                 }
-                else if (requestRepo.CheckForRequesterName(user.UserName))
+                if (requestRepo.CheckForRequesterName(user.UserName))
                 {
-                    ViewBag.requestsSent = requestRepo.Requests.Where(e => e.Requester == user.UserName);
+                    requests = requestRepo.Requests.Where(e => e.Requester == user.UserName).ToList();
+                    foreach(Request r in requests)
+                    {
+                       userRequests.Add(r);
+                    }
                 }
-                return View(await _context.Requests.ToListAsync());
-            }else if(data == "requests")
+                userRequests = requestRepo.Requests.ToList();
+                return View(userRequests);
+
+            } //If data == "requests" returns a list of the current user's created requests. 
+            else if(data == "requests")
             {
                 if (requestRepo.CheckForRequesterName(user.UserName))
                 {
-                    ViewBag.requestsSent = requestRepo.Requests.Where(e => e.Requester == user.UserName);
-                    return View(ViewBag.requestsSent);
+                    requests = requestRepo.Requests.Where(e => e.Requester == user.UserName).ToList();
+                    return View(requests);
                 }
                 else 
                     return NotFound();
-            }
+            } // If data == "received" returns a list of the current user's received requests. 
             else
             {
                 if (requestRepo.CheckForOwnerName(user.UserName))
                 {
-                    ViewBag.requestsReceived = requestRepo.Requests.Where(e => e.Owner == user.UserName);
-                    return View(ViewBag.requestsReceived);
+                    received = requestRepo.Requests.Where(e => e.Owner == user.UserName).ToList();
+                    return View(received);
                 }
                 else
                     return NotFound();
             }
         }
 
+        // Returns view of request create view, only viewable if passed a valid book id
         // GET: Requests/Create
         public IActionResult Create(int? id)
         {
@@ -73,19 +90,29 @@ namespace CommunityLibrary.Controllers
                 return NotFound();
             }
             Book book = _context.Books.Find(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
             ViewBag.thisBook = book.Title;
             ViewBag.bookOwner = book.Owner;
             ViewBag.bookImg = book.ImgLink;
             return View();
         }
 
+        // Creates a new book request
         // POST: Requests/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BookTitle,RequestID,Requester,Owner,Duration")] Request request)
         {
+            if(request.Duration != "1 week" && request.Duration != "2 weeks" && request.Duration != "3 weeks" ||
+                _context.Books.Find(request.BookTitle) == null || _context.Users.Find(request.Requester) == null ||
+                _context.Users.Find(request.Owner) == null)
+            {
+                return View(request);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(request);
@@ -95,6 +122,7 @@ namespace CommunityLibrary.Controllers
             return View(request);
         }
 
+        // Returns the Edit View, only the owner of the book can edit the request
         // GET: Requests/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -112,8 +140,7 @@ namespace CommunityLibrary.Controllers
         }
 
         // POST: Requests/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Edits the request
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("RequestID,Requester,Owner,BookTitle,Duration,Accepted")] Request request)
@@ -146,6 +173,7 @@ namespace CommunityLibrary.Controllers
             return View(request);
         }
 
+        // Deletes the request. Only the owner of the book can delete the request
         // GET: Requests/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

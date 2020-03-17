@@ -22,39 +22,23 @@ namespace CommunityLibrary.Controllers
         private IUserValidator<AppUser> userValidator;
         private IPasswordValidator<AppUser> passwordValidator;
         private IPasswordHasher<AppUser> passwordHasher;
-        static IBookRepo bookRepo;
-        static IReportRepo reportRepo;
-        static IReviewRepo reviewRepo;
-        static IRequestRepo requestRepo;
 
         public AdminController(UserManager<AppUser> usrMgr, IUserValidator<AppUser> userValid,
                 IPasswordValidator<AppUser> passValid, IPasswordHasher<AppUser> passwordHash,
-                RoleManager<IdentityRole> roleMgr, IBookRepo bookR, IReportRepo reportR,
-                IReviewRepo reviewR, IRequestRepo requestR)
+                RoleManager<IdentityRole> roleMgr)
         {
             userManager = usrMgr;
             userValidator = userValid;
             passwordValidator = passValid;
             passwordHasher = passwordHash;
             roleManager = roleMgr;
-            bookRepo = bookR;
-            reportRepo = reportR;
-            reviewRepo = reviewR;
-            requestRepo = requestR;
         }
 
 
         /********* Normal Admin Action Methods *********/
 
-        public async Task<ViewResult> Index()
+        public ViewResult Index()
         {
-            AppUser user = await userManager.GetUserAsync(HttpContext.User);
-
-            ViewBag.currentBooks = bookRepo.Books.Where(e => e.Owner == user.UserName).ToList();
-            ViewBag.Reports = reportRepo.Reports.Where(e => e.ReportedUserName == user.UserName).ToList();
-            ViewBag.currentReviews = reviewRepo.Reviews.Where(e => e.Reviewer == user.UserName).ToList();
-            ViewBag.currentRequests = requestRepo.Requests.Where(e => e.Requester == user.UserName).ToList();
-            ViewBag.currentReceived = requestRepo.Requests.Where(e => e.Owner == user.UserName).ToList();
             return View(userManager.Users);
         }
 
@@ -74,12 +58,11 @@ namespace CommunityLibrary.Controllers
                 };
                 IdentityResult result
                     = await userManager.CreateAsync(user, model.Password);
-                await userManager.AddToRoleAsync(user, "Users");
 
                 if (result.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(user, "Users");
                     return RedirectToAction("Index");
-
                 }
                 else
                 {
@@ -116,6 +99,7 @@ namespace CommunityLibrary.Controllers
             return View("Index", userManager.Users);
         }
 
+        // Gets the page for editing an existing user
         public async Task<IActionResult> Edit(string id)
         {
             AppUser user = await userManager.FindByIdAsync(id);
@@ -129,6 +113,7 @@ namespace CommunityLibrary.Controllers
             }
         }
 
+        // Edits an existing user
         [HttpPost]
         public async Task<IActionResult> Edit(string id, string email,
                 string password)
@@ -182,10 +167,13 @@ namespace CommunityLibrary.Controllers
         }
 
         /********* Admin Role Action Methods *********/
+        // Returns view of all roles
         public IActionResult Roles() => View(roleManager.Roles);
 
+        // Returns view for CreateRole page
         public IActionResult CreateRole() => View();
 
+        // Creates a new role
         [HttpPost]
         public async Task<IActionResult> CreateRole([Required]string name)
         {
@@ -204,6 +192,7 @@ namespace CommunityLibrary.Controllers
             return View(name);
         }
 
+        // Delets an existing role
         [HttpPost]
         public async Task<IActionResult> DeleteRole(string id)
         {
@@ -228,6 +217,7 @@ namespace CommunityLibrary.Controllers
             return View("Roles", roleManager.Roles);
         }
 
+        // Returns the view for Editing a role
         public async Task<IActionResult> EditRole(string id)
         {
             IdentityRole role = await roleManager.FindByIdAsync(id);
@@ -247,6 +237,8 @@ namespace CommunityLibrary.Controllers
             });
         }
 
+        // Edits an existing role (adding users to the role or removing
+        // users from the role)
         [HttpPost]
         public async Task<IActionResult> EditRole(RoleModificationViewModel model)
         {

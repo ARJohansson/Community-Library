@@ -10,62 +10,70 @@
 
 <h1>Requests</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th> Book Cover </th>
-            <th> Requester  </th>
-            <th> Book Owner </th>
-            <th> Title      </th>
-            <th> Duration   </th>
-            <th> Accepted   </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            Book book = bookRepo.GetBookByTitle(item.BookTitle);
-            @if (user.UserName == item.Owner)
+@if (Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th> Book Cover </th>
+                <th> Requester  </th>
+                <th> Book Owner </th>
+                <th> Title      </th>
+                <th> Duration   </th>
+                <th> Accepted   </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        <a asp-controller="Book" asp-action="Details" asp-route-id="@book.BookID">
-                            <img src="~/lib/book-covers/@(book.ImgLink).jpg" alt="@book.Title" width="100" height="150" >
-                        </a>
-                    </td>
-                    <td> @Html.DisplayFor(modelItem => item.Requester)  </td>
-                    <td> @Html.DisplayFor(modelItem => item.Owner)      </td>
-                    <td> @Html.DisplayFor(modelItem => item.BookTitle)  </td>
-                    <td> @Html.DisplayFor(modelItem => item.Duration)   </td>
-                    <td> @Html.DisplayFor(modelItem => item.Accepted)   </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.RequestID">Edit</a> |
-                        <a asp-action="Delete" asp-route-id="@item.RequestID">Delete</a>
+                Book book = bookRepo.GetBookByTitle(item.BookTitle);
+                @if (user.UserName == item.Owner)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Book" asp-action="Details" asp-route-id="@book.BookID">
+                                <img src="~/lib/book-covers/@(book.ImgLink).jpg" alt="@book.Title" width="100" height="150">
+                            </a>
+                        </td>
+                        <td> @Html.DisplayFor(modelItem => item.Requester)  </td>
+                        <td> @Html.DisplayFor(modelItem => item.Owner)      </td>
+                        <td> @Html.DisplayFor(modelItem => item.BookTitle)  </td>
+                        <td> @Html.DisplayFor(modelItem => item.Duration)   </td>
+                        <td> @Html.DisplayFor(modelItem => item.Accepted)   </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.RequestID">Edit</a> |
+                            <a asp-action="Delete" asp-route-id="@item.RequestID">Delete</a>
 
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                }
             }
-        }
-        @foreach (var item in Model)
-        {
-            Book book = bookRepo.GetBookByTitle(item.BookTitle);
-            @if (user.UserName == item.Requester)
+            @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        <a asp-controller="Book" asp-action="Details" asp-route-id="@book.BookID">
-                            <img src="~/lib/book-covers/@(book.ImgLink).jpg" alt="@book.Title" width="100" height="150" >
-                        </a>
-                    </td>
-                    <td> @Html.DisplayFor(modelItem => item.Requester)  </td>
-                    <td> @Html.DisplayFor(modelItem => item.Owner)      </td>
-                    <td> @Html.DisplayFor(modelItem => item.BookTitle)  </td>
-                    <td> @Html.DisplayFor(modelItem => item.Duration)   </td>
-                    <td> @Html.DisplayFor(modelItem => item.Accepted)   </td>
-                    <td></td>
-                </tr>
+                Book book = bookRepo.GetBookByTitle(item.BookTitle);
+                @if (user.UserName == item.Requester)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Book" asp-action="Details" asp-route-id="@book.BookID">
+                                <img src="~/lib/book-covers/@(book.ImgLink).jpg" alt="@book.Title" width="100" height="150">
+                            </a>
+                        </td>
+                        <td> @Html.DisplayFor(modelItem => item.Requester)  </td>
+                        <td> @Html.DisplayFor(modelItem => item.Owner)      </td>
+                        <td> @Html.DisplayFor(modelItem => item.BookTitle)  </td>
+                        <td> @Html.DisplayFor(modelItem => item.Duration)   </td>
+                        <td> @Html.DisplayFor(modelItem => item.Accepted)   </td>
+                        <td></td>
+                    </tr>
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
+else
+{
+    <h4>You have not created or received any requests.</h4>
+    <p>To request a book, slect the book you want to request and click the 'request book' link at the bottom of the page.</p>
+}

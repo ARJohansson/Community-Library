@@ -28,10 +28,13 @@ namespace CommunityLibrary.Controllers
             requestRepo = requestR;
         }
 
+        // Returns the View for the Index
         [HttpGet]
         public IActionResult Index()
         {
+            // Calculates the most popular books
             ViewBag.currentBooks = bookRepo.Books.Where(e => e.AverageRating >= 4).ToList();
+            // Selects five of them
             if(ViewBag.currentBooks.Count > 5)
             {
                 List<Book> books = ViewBag.currentBooks;
@@ -40,6 +43,7 @@ namespace CommunityLibrary.Controllers
             return View();
         }
 
+        // Checks which search bar is being used and passes the correct List to the Books View
         [HttpPost]
         public IActionResult Index(string? searchAuthor, string? searchTitle)
         {
@@ -51,6 +55,7 @@ namespace CommunityLibrary.Controllers
             {
                 if (searchAuthor != null)
                 {
+                    // Makes sure the search text doesn't have anything harmful before checking the repository
                     if (searchAuthor.Contains("<") || searchAuthor.Contains("=") || searchAuthor.Contains("$")
                        || searchAuthor.Contains("(") || searchAuthor.Contains("{"))
                         return View("Index");
@@ -64,6 +69,7 @@ namespace CommunityLibrary.Controllers
                 }
                 else
                 {
+                    // Makes sure the search text doesn't have anything harmful before checking the repository
                     if (searchTitle.Contains("<") || searchTitle.Contains("=") || searchTitle.Contains("$")
                        || searchTitle.Contains("(") || searchTitle.Contains("{"))
                         return View("Index");
@@ -78,6 +84,7 @@ namespace CommunityLibrary.Controllers
             }
         }
 
+        // Returns Privacy View - Currently Empty
         public IActionResult Privacy()
         {
             return View();

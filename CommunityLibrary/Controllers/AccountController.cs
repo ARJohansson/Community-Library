@@ -82,6 +82,7 @@ namespace CommunityLibrary.Controllers
             return View(details);
         }
 
+        // Logs a user out and returns the site to Home
         [Authorize]
         public async Task<IActionResult> Logout()
         {
@@ -89,6 +90,9 @@ namespace CommunityLibrary.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+
+        // Returns view of Access Denied if user does not have permission
+        // to access a page
         [AllowAnonymous]
         public IActionResult AccessDenied()
         {
@@ -100,6 +104,7 @@ namespace CommunityLibrary.Controllers
         [AllowAnonymous]
         public ViewResult SignUp() => View();
 
+        // Creates a new user
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> SignUp(CreateUserViewModel model)
@@ -118,12 +123,14 @@ namespace CommunityLibrary.Controllers
                     user.Name = model.Name;
                 }
 
+                // Ties user to the password
                 IdentityResult result =
                     await userManager.CreateAsync(user, model.Password);
-                await userManager.AddToRoleAsync(user, "Users");
 
                 if (result.Succeeded)
                 {
+                    // Adds the user to the Users role
+                    await userManager.AddToRoleAsync(user, "Users");
                     return RedirectToAction("Index");
                 }
                 else
@@ -137,6 +144,7 @@ namespace CommunityLibrary.Controllers
             return View(model);
         }
 
+        // Returns the view of a user's home page
         [Authorize(Roles = "Users,Admins")]
         public async Task<ActionResult> Index()
         {

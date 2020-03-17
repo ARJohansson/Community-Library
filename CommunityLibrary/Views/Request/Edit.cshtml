@@ -2,7 +2,7 @@
 @inject UserManager<AppUser> UserManager
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Accept Request";
     Layout = "~/Views/Shared/_Layout.cshtml";
     AppUser user = await UserManager.GetUserAsync(Context.User);
 }
