@@ -49,7 +49,7 @@ namespace CommunityLibrary.Controllers
         {
             if (searchAuthor == null && searchTitle == null)
             {
-                return View("Index");
+                return RedirectToAction(nameof(Index));
             }
             else
             {
