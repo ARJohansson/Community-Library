@@ -31,7 +31,7 @@
     {
         foreach (AppUser user in Model)
         {
-            { 
+            @{ 
                 ViewBag.currentBooks = bookRepo.Books.Where(e => e.Owner == user.UserName).ToList();
                 ViewBag.Reports = reportRepo.Reports.Where(e => e.ReportedUserName == user.UserName).ToList();
                 ViewBag.currentReviews = reviewRepo.Reviews.Where(e => e.Reviewer == user.UserName).ToList();
