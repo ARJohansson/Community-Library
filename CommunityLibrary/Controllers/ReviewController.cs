@@ -50,6 +50,17 @@ namespace CommunityLibrary.Controllers
                 {
                     return View(ViewBag.userReviews);
                 }
+                else if (id != null)
+                {
+                    Book book = await _context.Books.FirstOrDefaultAsync(b => b.BookID == id);
+                    if (book != null)
+                    {
+                        ViewBag.bookReviews = reviewRepo.Reviews.Where(e => e.BookTitle == book.Title).ToList();
+                        return View(ViewBag.bookReviews);
+                    }
+                    else
+                        return NotFound();
+                }
             }
             // if id is not null then return reviews based on the selected book
             else if (id != null)
@@ -64,10 +75,6 @@ namespace CommunityLibrary.Controllers
                     return NotFound();
             }
             // otherwise return all reviews
-            else
-            {
-                return View(await _context.Reviews.ToListAsync());
-            }
 
             return View(await _context.Reviews.ToListAsync());
         }
@@ -101,7 +108,7 @@ namespace CommunityLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int reviewID, string text, string bookTitle, int bookRating)
         {
-            if(_context.Books.Find(bookTitle) == null || bookRepo.CheckForBookByTitle(bookTitle) == false)
+            if(bookRepo.CheckForBookByTitle(bookTitle) == false)
             {
                 return NotFound();
             }

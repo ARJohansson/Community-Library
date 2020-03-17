@@ -19,13 +19,15 @@ namespace CommunityLibrary.Controllers
         private readonly ApplicationDbContext _context;
         private UserManager<AppUser> userManager;
         private IRequestRepo requestRepo;
+        private IBookRepo bookRepo;
 
         public RequestController(ApplicationDbContext context, UserManager<AppUser> userMgr,
-                IRequestRepo requestR)
+                IRequestRepo requestR, IBookRepo bookR)
         {
             _context = context;
             userManager = userMgr;
             requestRepo = requestR;
+            bookRepo = bookR;
         }
 
         // Returns a list of requests depending on paramater variable data.
@@ -106,11 +108,17 @@ namespace CommunityLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BookTitle,RequestID,Requester,Owner,Duration")] Request request)
         {
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
             if(request.Duration != "1 week" && request.Duration != "2 weeks" && request.Duration != "3 weeks" ||
-                _context.Books.Find(request.BookTitle) == null || _context.Users.Find(request.Requester) == null ||
-                _context.Users.Find(request.Owner) == null)
+               bookRepo.CheckForBookByTitle(request.BookTitle) == false || user == null || user.UserName != request.Requester)
             {
                 return View(request);
+            }
+
+            Book book = bookRepo.GetBookByTitle(request.BookTitle);
+            if(book.Owner != request.Owner)
+            {
+                return NotFound();
             }
 
             if (ModelState.IsValid)

@@ -1,20 +1,22 @@
 ﻿@model CommunityLibrary.Models.Request
 @inject UserManager<AppUser> UserManager
+@inject IBookRepo bookRepo
 
 @{
     ViewData["Title"] = "Request Book";
     Layout = "~/Views/Shared/_Layout.cshtml";
     AppUser user = await UserManager.GetUserAsync(Context.User);
+    Book book = bookRepo.GetBookByTitle(ViewBag.thisBook);
 }
 
 <h1>Create</h1>
 
 <h4>Request</h4>
 <hr />
-<img src="~/lib/book-covers/@(ViewBag.bookImg).jpg" alt="@ViewBag.thisBook" width="150" height="200" >
+<img src="~/lib/book-covers/@(ViewBag.bookImg).jpg" alt="@book" width="150" height="200" >
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" asp-route-BookTitle="@ViewBag.thisBook">
+        <form asp-action="Create" asp-route-BookTitle="@book.Title">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Requester">You: @user.UserName</label>

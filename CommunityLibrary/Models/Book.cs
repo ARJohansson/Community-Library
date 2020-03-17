@@ -19,7 +19,7 @@ namespace CommunityLibrary.Models
         [RegularExpression(@"([A-Za-z'\s]){2,100}")]
         public string Title { get; set; }
 
-        [RegularExpression(@"^([A-za-z]+[\s]{1}[A-za-z]+)|([A-Za-z]+)|([A-Z.\s]+[a-z]{0,})$")]
+        [RegularExpression(@"(([A-Z.]{1,4})+\s+[A-Za-z]{0,50})|(([A-Z]{1}[a-z]{1,20}[\s]{0,1}){1,4})")]
         public string Author { get; set; }
         [Required]
         [RegularExpression(@"^(([A-za-z]+[\s]{1}[A-za-z]+)|([A-Za-z]+))$")]
