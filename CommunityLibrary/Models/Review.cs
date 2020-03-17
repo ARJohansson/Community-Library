@@ -15,15 +15,17 @@ namespace CommunityLibrary.Models
 
         [Required]
         [StringLength(100, MinimumLength = 2)]
-        [RegularExpression(@"[^/}{)(><=][^\.\.][^./]+$")]
+        [RegularExpression(@"([A-Za-z'\s]){2,100}")]
         public string BookTitle { get; set; }
 
-        [RegularExpression(@"[^/}{)(><=][^\.\.][^./]+.")]
+        [RegularExpression(@"([A-Za-z.!?'\s])")]
         public string Text { get; set; }
         [Required]
         [Range(1, 5)]
+        [RegularExpression(@"[1-5]")]
         public int BookRating { get; set; }
         [Range(1, 5)]
+        [RegularExpression(@"[1-5]")]
         public int ReviewRating { get; set; }
     }
 }

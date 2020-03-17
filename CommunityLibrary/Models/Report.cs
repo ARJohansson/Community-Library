@@ -19,7 +19,7 @@ namespace CommunityLibrary.Models
         [Required]
         public string Reason { get; set; }
 
-        [RegularExpression(@"[^/}{)(><=][^\.\.][^./]+.")]
+        [RegularExpression(@"([A-Za-z.!?'\s])")]
         public string Details { get; set; }
     }
 }
