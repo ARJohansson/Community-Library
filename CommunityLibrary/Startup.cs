@@ -115,7 +115,7 @@ namespace CommunityLibrary
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            context.Database.Migrate();
+            //context.Database.Migrate();
 
             ApplicationDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
             ApplicationDbContext.CreateTestUserAccount(app.ApplicationServices, Configuration).Wait();
