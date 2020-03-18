@@ -18,7 +18,7 @@ namespace CommunityLibrary.Models
 
         [Required]
         [StringLength(100, MinimumLength = 2)]
-        [RegularExpression(@"[^/}{)(><=][^\.\.][^./]+$")]
+        [RegularExpression(@"([A-Za-z'\s]){2,100}")]
         public string BookTitle { get; set; }
 
         [Required]

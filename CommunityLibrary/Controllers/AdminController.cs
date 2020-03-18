@@ -39,7 +39,7 @@ namespace CommunityLibrary.Controllers
 
         public ViewResult Index()
         {
-            return View(userManager.Users);
+            return View(userManager.Users.ToList());
         }
 
         // Get Request returns the base Create View
@@ -223,7 +223,7 @@ namespace CommunityLibrary.Controllers
             IdentityRole role = await roleManager.FindByIdAsync(id);
             List<AppUser> members = new List<AppUser>();
             List<AppUser> nonMembers = new List<AppUser>();
-            foreach (AppUser user in userManager.Users)
+            foreach (AppUser user in userManager.Users.ToList())
             {
                 var list = await userManager.IsInRoleAsync(user, role.Name)
                     ? members : nonMembers;
@@ -269,9 +269,6 @@ namespace CommunityLibrary.Controllers
                         }
                     }
                 }
-            }
-            if (ModelState.IsValid)
-            {
                 return RedirectToAction(nameof(Roles));
             }
             else

@@ -52,6 +52,15 @@ namespace CommunityLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel details, string returnUrl)
         {
+            if (returnUrl != null)
+            {
+                if (!returnUrl.Contains("/Create") && !returnUrl.Contains("/Admin") && !returnUrl.Contains("/Account") &&
+                    !returnUrl.Contains("/Report/Index") && !returnUrl.Contains("Report/UserDetails"))
+                {
+                    ModelState.AddModelError(nameof(LoginViewModel.UserName),
+                        "Invalid Url Path");
+                }
+            }
             if (ModelState.IsValid)
             {
                 // Finds the appuser based on the entered username

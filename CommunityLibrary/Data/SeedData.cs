@@ -13,9 +13,6 @@ namespace CommunityLibrary.Data
 {
     public class SeedData
     {
-        private UserManager<AppUser> userManager;
-        private IBookRepo context;
-
         public static async Task Seed(ApplicationDbContext context,
             IConfiguration configuration, IServiceProvider serviceProvider)
         {
@@ -214,8 +211,8 @@ namespace CommunityLibrary.Data
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, role);
+                    context.Users.Add(user);
                 }
-                context.Users.Add(user);
             }
         }
 

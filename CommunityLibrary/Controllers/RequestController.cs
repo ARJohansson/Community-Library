@@ -19,13 +19,15 @@ namespace CommunityLibrary.Controllers
         private readonly ApplicationDbContext _context;
         private UserManager<AppUser> userManager;
         private IRequestRepo requestRepo;
+        private IBookRepo bookRepo;
 
         public RequestController(ApplicationDbContext context, UserManager<AppUser> userMgr,
-                IRequestRepo requestR)
+                IRequestRepo requestR, IBookRepo bookR)
         {
             _context = context;
             userManager = userMgr;
             requestRepo = requestR;
+            bookRepo = bookR;
         }
 
         // Returns a list of requests depending on paramater variable data.
@@ -42,7 +44,7 @@ namespace CommunityLibrary.Controllers
                 if (requestRepo.CheckForOwnerName(user.UserName))
                 {
                     received = requestRepo.Requests.Where(e => e.Owner == user.UserName).ToList();
-                    foreach(Request r in received)
+                    foreach (Request r in received)
                     {
                         userRequests.Add(r);
                     }
@@ -50,26 +52,26 @@ namespace CommunityLibrary.Controllers
                 if (requestRepo.CheckForRequesterName(user.UserName))
                 {
                     requests = requestRepo.Requests.Where(e => e.Requester == user.UserName).ToList();
-                    foreach(Request r in requests)
+                    foreach (Request r in requests)
                     {
-                       userRequests.Add(r);
+                        userRequests.Add(r);
                     }
                 }
                 userRequests = requestRepo.Requests.ToList();
                 return View(userRequests);
 
             } //If data == "requests" returns a list of the current user's created requests. 
-            else if(data == "requests")
+            else if (data == "requests")
             {
                 if (requestRepo.CheckForRequesterName(user.UserName))
                 {
                     requests = requestRepo.Requests.Where(e => e.Requester == user.UserName).ToList();
                     return View(requests);
                 }
-                else 
+                else
                     return NotFound();
             } // If data == "received" returns a list of the current user's received requests. 
-            else
+            else if (data == "received")
             {
                 if (requestRepo.CheckForOwnerName(user.UserName))
                 {
@@ -79,6 +81,8 @@ namespace CommunityLibrary.Controllers
                 else
                     return NotFound();
             }
+            else
+                return NotFound();
         }
 
         // Returns view of request create view, only viewable if passed a valid book id
@@ -106,11 +110,17 @@ namespace CommunityLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BookTitle,RequestID,Requester,Owner,Duration")] Request request)
         {
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
             if(request.Duration != "1 week" && request.Duration != "2 weeks" && request.Duration != "3 weeks" ||
-                _context.Books.Find(request.BookTitle) == null || _context.Users.Find(request.Requester) == null ||
-                _context.Users.Find(request.Owner) == null)
+               bookRepo.CheckForBookByTitle(request.BookTitle) == false || user == null || user.UserName != request.Requester)
             {
                 return View(request);
+            }
+
+            Book book = bookRepo.GetBookByTitle(request.BookTitle);
+            if(book.Owner != request.Owner)
+            {
+                return NotFound();
             }
 
             if (ModelState.IsValid)

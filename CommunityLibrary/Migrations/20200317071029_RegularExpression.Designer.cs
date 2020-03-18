@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CommunityLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200316194042_RegularExpression")]
+    [Migration("20200317071029_RegularExpression")]
     partial class RegularExpression
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
