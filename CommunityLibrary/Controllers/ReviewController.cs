@@ -108,6 +108,16 @@ namespace CommunityLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int reviewID, string text, string bookTitle, int bookRating)
         {
+            if(bookRating < 1 || bookRating > 5)
+            {
+                ModelState.AddModelError(nameof(LoginViewModel.UserName),
+                       "Invalid bookRating");
+            } else if(text.Contains(":/") || text.Contains("\"") || text.Contains(".."+ "\\") || (text == null) ||
+                text.Contains("{") || text.Contains("<") || text.Contains("}") || text.Contains(">")){
+                ModelState.AddModelError(nameof(LoginViewModel.UserName),
+                        "Invalid Text");
+            }
+
             if(bookRepo.CheckForBookByTitle(bookTitle) == false)
             {
                 return NotFound();

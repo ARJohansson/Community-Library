@@ -147,7 +147,7 @@ namespace CommunityLibrary.Controllers
         [Authorize(Roles = "Users,Admins")]
         public async Task<IActionResult> Edit(int id, [Bind("BookID,Title,ImgLink,Author,Owner,Borrower,Written,Availability,AverageRating")] Book book)
         {
-            if (id != book.BookID)
+            if (!BookExists(book.BookID))
             {
                 return NotFound();
             }

@@ -44,7 +44,7 @@ namespace CommunityLibrary.Controllers
                 if (requestRepo.CheckForOwnerName(user.UserName))
                 {
                     received = requestRepo.Requests.Where(e => e.Owner == user.UserName).ToList();
-                    foreach(Request r in received)
+                    foreach (Request r in received)
                     {
                         userRequests.Add(r);
                     }
@@ -52,26 +52,26 @@ namespace CommunityLibrary.Controllers
                 if (requestRepo.CheckForRequesterName(user.UserName))
                 {
                     requests = requestRepo.Requests.Where(e => e.Requester == user.UserName).ToList();
-                    foreach(Request r in requests)
+                    foreach (Request r in requests)
                     {
-                       userRequests.Add(r);
+                        userRequests.Add(r);
                     }
                 }
                 userRequests = requestRepo.Requests.ToList();
                 return View(userRequests);
 
             } //If data == "requests" returns a list of the current user's created requests. 
-            else if(data == "requests")
+            else if (data == "requests")
             {
                 if (requestRepo.CheckForRequesterName(user.UserName))
                 {
                     requests = requestRepo.Requests.Where(e => e.Requester == user.UserName).ToList();
                     return View(requests);
                 }
-                else 
+                else
                     return NotFound();
             } // If data == "received" returns a list of the current user's received requests. 
-            else
+            else if (data == "received")
             {
                 if (requestRepo.CheckForOwnerName(user.UserName))
                 {
@@ -81,6 +81,8 @@ namespace CommunityLibrary.Controllers
                 else
                     return NotFound();
             }
+            else
+                return NotFound();
         }
 
         // Returns view of request create view, only viewable if passed a valid book id
